@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>折现率计算器</title>
+  <meta charset="UTF-8" content="width=device-width,user-scalable=no" name="viewport">
+  <style>
+    /* CSS样式 */
+	.container {
+    	display: flex;
+    	flex-direction: column;
+    	justify-content: center;
+    	align-items: center;
+    	height: 10vh;
+    	text-align: center;
+    }
+        h1{
+            text-align: center;
+        }
+        hr{
+            width:80%;
+        }
+       a{
+        text-decoration: none;
+    }
+    body {
+      font-family: Arial, sans-serif;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 10px;
+      margin-right: 10px;
+      margin-left:10px;
+    }
+    
+    input[type="number"] {
+      width: 100px;
+      height: 40px;
+      margin-right:5px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      box-sizing: border-box;
+    }
+    
+    button {
+      display: inline-blockblock;
+      margin-top: 5px;
+      padding: 5px 15px;
+      background-color: #007bff;
+      color: #fff;
+      font-size: 15px;
+      align-items: center;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    
+    button:hover {
+      background-color: #0069d9;
+    }
+    
+    center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+  </style>
+</head>
+
+<body>
+             <a href='index.html'><h1>COOLYOYA 酷优雅</h1></a><hr>
+  <h2 align='center'>折现率计算器</h2>
+  
+  <div class="container"></div>
+    <form style="display:flex;justify-content:center">
+          
+        <label for="PVcoefficient">复利现值系数：</label>
+        <input type="number" id="PVcoefficient"  name="PVcoefficient"><br>
+        <div style="margin-top: 10px;"></div>
+        
+        <label for="periods">期数(n)：</label>
+        <input type="number" id="periods" name="periods" min="0">
+          
+        <button type="button" onclick="calculate()">计算</button>
+    </form>
+    <hr width=500px>
+    <div id="results" align='center'></div>
+  
+    <script>
+        // JavaScript代码
+        function calculate() {
+          // 获取用户输入
+          var PVcoefficient = document.getElementById("PVcoefficient").value;
+          var periods = document.getElementById("periods").value;
+    
+          // 已知复利现值系数计算折现率
+          var rate = (((1/PVcoefficient)**(1/periods))-1)*100;    
+    
+          // 显示结果
+          var results = document.getElementById("results");
+          results.innerHTML = "<p>折现率= " + rate.toFixed(4) + "%" + "</p>";
+        }
+    </script>
+ </div>
+ 
+   <div class="container"></div>
+    <form style="display:flex;justify-content:center">
+          
+        <label for="FVcoefficient">复利终值系数：</label>
+        <input type="number" id="FVcoefficient"  name="FVcoefficient"><br>
+        <div style="margin-top: 10px;"></div>
+        
+        <label for="periods2">期数(n)：</label>
+        <input type="number" id="periods2" name="periods2" min="0">
+          
+        <button type="button" onclick="calculate2()">计算</button>
+    </form>
+    <hr width=500px>
+    <div id="results2" align='center'></div>
+  
+    <script>
+        // JavaScript代码
+        function calculate2() {
+          // 获取用户输入
+          var FVcoefficient = document.getElementById("FVcoefficient").value;
+          var periods2 = document.getElementById("periods2").value;
+    
+          // 已知复利终值系数计算折现率
+          var rate2 = (FVcoefficient**(1/periods2)-1)*100;    
+    
+          // 显示结果
+          var results2 = document.getElementById("results2");
+          results2.innerHTML = "<p>折现率= " + rate2.toFixed(4) + "%" + "</p>";
+        }
+    </script>
+ </div>
+</body>
+</html>

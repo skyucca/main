@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>复利现值终值系数计算器</title>
+  <meta charset="UTF-8" content="width=device-width,user-scalable=no" name="viewport">
+  <style>
+    /* CSS样式 */
+	.container {
+    	display: flex;
+    	flex-direction: column;
+    	justify-content: center;
+    	align-items: center;
+    	height: 10vh;
+    	text-align: center;
+    }
+       a{
+        text-decoration: none;
+    }
+        hr{
+            width:80%;
+        }
+    body {
+      font-family: Arial, sans-serif;
+    }
+            h1{
+            text-align: center;
+        }
+    label {
+      display: block;
+      margin-bottom: 10px;
+      margin-right: 10px;
+      margin-left:10px;
+    }
+    
+    input[type="number"] {
+      width: 100px;
+      height: 40px;
+      margin-right:5px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      box-sizing: border-box;
+    }
+    
+    button {
+      display: inline-blockblock;
+      margin-top: 5px;
+      padding: 5px 15px;
+      background-color: #007bff;
+      color: #fff;
+      font-size: 15px;
+      align-items: center;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    
+    button:hover {
+      background-color: #0069d9;
+    }
+    
+    center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+  </style>
+</head>
+
+<body>
+        <a href='../index.html'><h1>COOLYOYA 酷优雅</h1></a><hr>
+  <h2 align='center'>复利现值终值系数计算器</h2>
+  
+  <div class="container"></div>
+      <form style="display:flex;justify-content:center">
+        <label for="rate">利率(%)：</label>
+        <input type="number" id="rate"  name="rate" step="0.01" min="0" max="100"><br>
+        <div style="margin-top: 10px;"></div>
+        <label for="periods">期数(n)：</label>
+        <input type="number" id="periods" name="periods" min="0">
+        <button type="button" onclick="calculate()">计算</button>
+      </form>
+  </div>
+  
+  <div id="results" align='center'></div>
+  <script>
+    // JavaScript代码
+    function calculate() {
+      // 获取用户输入
+      var rate = document.getElementById("rate").value;
+      var periods = document.getElementById("periods").value;
+
+      // 计算复利现值系数
+      var pvif = 1 / ((1 + rate/100)**periods);
+      
+      // 计算复利终值系数
+      var fvif = (1 + rate/100)**periods;
+      
+      // 计算年金现值系数
+      var pvifa = (1-(1 + rate/100)**(-periods)) / (rate/100);
+      
+      // 计算年金终值系数
+      var fvifa = ((1 + rate/100)**periods - 1) / (rate/100);
+      
+
+
+      // 显示结果
+      var results = document.getElementById("results");
+      results.innerHTML = "<p>复利现值系数 [(1+i)^n] = " + pvif.toFixed(4) + "</p>" +
+                          "<p>复利终值系数 [(1+i)^(-n)] = " + fvif.toFixed(4) + "</p>" +
+                          "<p>年金现值系数 [(1-(1+i)^(-n))/i] = " + pvifa.toFixed(4) + "</p>" +
+                          "<p>年金终值系数 [((1+i)^n-1)/i] = " + fvifa.toFixed(4) + "</p>";
+    }
+  </script></br>
+  <div align='center'>---------------------------------</div>
+  <div align='center'>contact:116379452@qq.com</div>
+</body>
+</html>

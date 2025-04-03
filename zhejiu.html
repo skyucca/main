@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>双倍余额递减法计算固定资产折旧</title>
+     <meta charset="UTF-8" content="width=device-width,user-scalable=no" name="viewport">
+     <style>
+        h1{
+            text-align: center;
+        }
+           a{
+        text-decoration: none;
+    }
+        hr{
+            width:80%;
+        }
+     </style>
+
+</head>
+<body>
+           <a href='index.html'><h1>COOLYOYA 酷优雅</h1></a><hr>
+    <h2 align='center'>双倍余额递减法计算固定资产折旧</h2>
+    <div  align='center'>
+        <p>
+            第1年~倒数第3年：<br>
+            （1）年折旧率=2/预计的折旧年限×100%<br>
+            （2）固定资产期初账面净值=固定资产原值-累计折旧<br>
+            （3）每期折旧额=固定资产期初账面净值×年折旧率<br>
+            最后2年：<br>
+            每年折旧额=(固定资产原值-累计折旧-资产减值准备-预计净残值)/2
+        </p>
+    </div>
+    <div  align='center'>
+        <label for="originalValue">固定资产原值:</label>
+        <input type="number" id="originalValue" required><br><br>
+        
+        <label for="residualValue">预计净残值:</label>
+        <input type="number" id="residualValue" required><br><br>
+    
+        <label for="lifeSpan">预计使用年限:</label>
+        <input type="number" id="lifeSpan" required><br><br>
+    
+        <button onclick="calculateDepreciation()">计算折旧</button>
+        <h3>计算结果:</h3>
+    </div>
+    
+    <div id="result" align='center'></div>
+
+    <script>
+        function calculateDepreciation() {
+            var originalValue = document.getElementById('originalValue').value;
+            var residualValue = document.getElementById('residualValue').value;
+            var lifeSpan = document.getElementById('lifeSpan').value;
+        
+            var result = "";
+            var currentValue = originalValue;
+            var doubleDecliningRate = (2 / lifeSpan) * 100;
+        
+            for (var year = 1; year <= lifeSpan; year++) {
+                if (year <= lifeSpan - 2) {
+                    var depreciation = currentValue * doubleDecliningRate / 100;
+                    currentValue -= depreciation;
+                } else {
+                    depreciation = (currentValue - residualValue) / (lifeSpan - year + 1);
+                    currentValue -= depreciation;
+                }
+                result += "第 " + year + " 年的折旧额: " + depreciation.toFixed(2) + "，期末净值: " + currentValue.toFixed(2) + "<br>";
+            }
+        
+            document.getElementById('result').innerHTML = result;
+        }
+    </script>
+</body>
+</html>

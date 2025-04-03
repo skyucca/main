@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时间、日历与倒计时</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        /* 圆形时钟样式 */
+        .clock-circle {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 10px solid #3498db;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .clock-face {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .hand {
+            width: 50%;
+            height: 6px;
+            background: #333;
+            position: absolute;
+            top: 50%;
+            transform-origin: 100%;
+            transform: rotate(90deg);
+            transition: all 0.05s;
+            transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
+        }
+        
+        .hour-hand {
+            width: 35%;
+            left: 15%;
+            height: 8px;
+            background: #2c3e50;
+        }
+        
+        .min-hand {
+            width: 45%;
+            left: 5%;
+            height: 6px;
+            background: #2c3e50;
+        }
+        
+        .second-hand {
+            height: 3px;
+            background: #e74c3c;
+        }
+        
+        .center-point {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 15px;
+            height: 15px;
+            background: #e74c3c;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+        
+        .date-display {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        /* 时钟刻度样式 */
+        .clock-mark {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+        
+        .mark {
+            position: absolute;
+            width: 2px;
+            height: 10px;
+            background: #666;
+            left: 50%;
+            transform-origin: 50% 150px;
+        }
+        
+        .hour-mark {
+            height: 15px;
+            background: #2c3e50;
+            width: 3px;
+        }
+        
+        /* 数字时钟样式 */
+        .digital-clock {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        #monthly-calendar table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        #monthly-calendar th,
+        #monthly-calendar td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        #monthly-calendar th {
+            background-color: #f0f0f0;
+        }
+        
+        /* 倒计时器样式 */
+        .countdown {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .countdown-input {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        input[type="text"], input[type="date"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            flex-grow: 1;
+        }
+        
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            white-space: nowrap;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .countdown-list {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .countdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .countdown-info {
+            text-align: left;
+            flex-grow: 1;
+        }
+        
+        .countdown-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        .countdown-date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .countdown-days {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e74c3c;
+            min-width: 100px;
+            text-align: right;
+        }
+        
+        .expired {
+            border-left-color: #e74c3c;
+        }
+        
+        .expired .countdown-days {
+            color: #e74c3c;
+        }
+        
+        .delete-btn {
+            background-color: #e74c3c;
+            padding: 5px 10px;
+            margin-left: 10px;
+        }
+        
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        /* 倒计时器样式 */
+        .countdown {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+	
+	/* 链接不显示下划线 */
+	a {
+            text-decoration: none;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>时钟、日历与倒计时</h1>
+        
+        <!-- 圆形时钟部分 -->
+        <div class="clock-circle">
+            <div class="clock-face">
+                <div class="clock-mark" id="clock-marks"></div>
+                <div class="hand hour-hand"></div>
+                <div class="hand min-hand"></div>
+                <div class="hand second-hand"></div>
+                <div class="center-point"></div>
+                <div class="date-display"></div> <!-- 添加日期显示元素 -->
+            </div>
+        </div>
+        
+        <!-- 数字时钟部分 -->
+        <div class="digital-clock">
+            <div id="digital-time"></div>	    
+        </div>
+
+        <!-- 月历显示区域 -->
+        <div id="monthly-calendar"></div>
+
+        <!-- 倒计时器部分 -->
+        <div class="countdown">
+            <h2>距未来事件的天数</h2>
+            <div class="countdown-input">
+                <div class="input-group">
+                    <input type="text" id="event-name" placeholder="事件名称">
+                </div>
+                <div class="input-group">
+                    <input type="date" id="event-date">
+                    <button id="set-countdown">添加倒计时</button>
+                </div>
+            </div>
+            <div class="countdown-list" id="countdown-list"></div>
+        </div>
+    </div>    
+
+	<!-- 添加页脚 -->
+    <footer>
+        <a href="mailto:skyucca@qq.com">mailto: skyucca@qq.com</a>
+    </footer>
+
+    <script>
+        // 创建时钟刻度
+        function createClockMarks() {
+            const clockMarkContainer = document.getElementById('clock-marks');
+            clockMarkContainer.innerHTML = '';
+
+            // 创建60个分钟刻度
+            for (let i = 0; i < 60; i++) {
+                const mark = document.createElement('div');
+                mark.className = 'mark';
+                mark.style.transform = `rotate(${i * 6}deg) translateX(-50%)`;
+                mark.style.left = '50%';
+
+                // 每5分钟（小时刻度）加粗
+                if (i % 5 === 0) {
+                    mark.classList.add('hour-mark');
+                }
+
+                clockMarkContainer.appendChild(mark);
+            }
+        }
+        
+        // 圆形时钟功能
+        function updateClock() {
+            const now = new Date();
+            
+            // 圆形时钟指针
+            const secondHand = document.querySelector('.second-hand');
+            const minuteHand = document.querySelector('.min-hand');
+            const hourHand = document.querySelector('.hour-hand');
+            
+            const seconds = now.getSeconds();
+            const secondsDegrees = ((seconds / 60) * 360) + 90;
+            secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
+            
+            const minutes = now.getMinutes();
+            const minutesDegrees = ((minutes / 60) * 360) + 90;
+            minuteHand.style.transform = `rotate(${minutesDegrees}deg)`;
+            
+            const hours = now.getHours();
+            const hoursDegrees = ((hours / 12) * 360) + ((minutes / 60) * 30) + 90;
+            hourHand.style.transform = `rotate(${hoursDegrees}deg)`;
+            
+            // 圆形时钟日期显示
+            const dateDisplay = document.querySelector('.date-display');
+            dateDisplay.textContent = now.toLocaleDateString('zh-CN', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                weekday: 'long'
+            });
+            
+            // 数字时钟显示
+            const digitalTime = document.getElementById('digital-time');	
+            
+            digitalTime.textContent = now.toLocaleTimeString('zh-CN', { 
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });          
+        }
+
+        // 生成月历
+        function generateMonthlyCalendar() {
+            const now = new Date();
+            const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+            const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+            const daysInMonth = lastDayOfMonth.getDate();
+            const firstDayOfWeek = (firstDayOfMonth.getDay() + 6) % 7; // 调整为周一开始
+
+            const monthlyCalendar = document.getElementById('monthly-calendar');
+            monthlyCalendar.innerHTML = '';
+
+            const table = document.createElement('table');
+            const thead = document.createElement('thead');
+            const tbody = document.createElement('tbody');
+
+            const daysOfWeek = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+            const headerRow = document.createElement('tr');
+            daysOfWeek.forEach(day => {
+                const th = document.createElement('th');
+                th.textContent = day;
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+
+            let dayCount = 1;
+            for (let i = 0; i < 6; i++) {
+                const row = document.createElement('tr');
+                for (let j = 0; j < 7; j++) {
+                    const td = document.createElement('td');
+                    if ((i === 0 && j < firstDayOfWeek) || dayCount > daysInMonth) {
+                        td.textContent = '';
+                    } else {
+                        td.textContent = dayCount;
+                        if (dayCount === now.getDate()) {
+                            td.style.fontWeight = 'bold';
+                            td.style.color = '#e74c3c';
+                        }
+                        dayCount++;
+                    }
+                    row.appendChild(td);
+                }
+                tbody.appendChild(row);
+            }
+
+            table.appendChild(thead);
+            table.appendChild(tbody);
+            monthlyCalendar.appendChild(table);
+        }
+
+        // 倒计时功能
+        let countdowns = JSON.parse(localStorage.getItem('countdowns')) || [];
+        
+        function renderCountdowns() {
+            const countdownList = document.getElementById('countdown-list');
+            countdownList.innerHTML = '';
+            
+            const now = new Date();
+            
+            countdowns.forEach((countdown, index) => {
+                const eventDate = new Date(countdown.date);
+                const diffTime = eventDate - now;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                const countdownItem = document.createElement('div');
+                countdownItem.className = 'countdown-item';
+                
+                if (diffTime <= 0) {
+                    countdownItem.classList.add('expired');
+                }
+                
+                countdownItem.innerHTML = `
+                    <div class="countdown-info">
+                        <div class="countdown-name">${countdown.name}</div>
+                        <div class="countdown-date">${eventDate.toLocaleDateString('zh-CN')}</div>
+                    </div>
+                    <div class="countdown-days">${diffDays > 0 ? diffDays : '已过期'}</div>
+                    <button class="delete-btn" onclick="deleteCountdown(${index})">删除</button>
+                `;
+                
+                countdownList.appendChild(countdownItem);
+            });
+            
+            localStorage.setItem('countdowns', JSON.stringify(countdowns));
+        }
+
+        function addCountdown() {
+            const eventName = document.getElementById('event-name').value;
+            const eventDate = document.getElementById('event-date').value;
+
+            if (eventName && eventDate) {
+                countdowns.push({ name: eventName, date: eventDate });
+                renderCountdowns();
+                document.getElementById('event-name').value = '';
+                document.getElementById('event-date').value = '';
+            }
+        }
+
+        function deleteCountdown(index) {
+            countdowns.splice(index, 1);
+            renderCountdowns();
+        }
+
+        // 初始化
+        createClockMarks();
+        updateClock();
+        generateMonthlyCalendar();
+        renderCountdowns();
+
+        // 每秒更新时钟
+        setInterval(updateClock, 1000);
+
+        // 绑定添加倒计时按钮事件
+        document.getElementById('set-countdown').addEventListener('click', addCountdown);
+    </script>
+</body>
+</html>
