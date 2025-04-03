@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>临时记事本</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .section {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .error {
+            color: red;
+        }
+#notes-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+}
+#notes-list li {
+  margin: 0; /* 移除原有margin */
+}
+        button {
+            cursor: pointer;
+            padding: 5px 10px;
+            margin-left: 5px;
+        }
+        input[type="text"]{
+            padding: 10px;
+            width: 30%;
+            margin-right: 10px;
+        }
+        /* 新增样式 */
+        .input-group {
+            display: flex;
+            gap: 100px;
+        }
+        .search-box, .add-box {
+            display: flex;
+            flex: 1;
+        }
+        .search-box input, .add-box input {
+            flex: 1;
+            width: auto;
+            margin-right: 30;
+        }
+        /* 删除按钮样式 */
+        .delete-btn {
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 3px;
+        }
+        .delete-btn:hover {
+            background-color: #cc0000;
+        }
+        .note-content {
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body>
+<h2>临时记事本</h2>
+<h3>★★★★★★★★★★★★★★★★★★★★</h3>
+<h3>仅用于浏览网页时临时记事而又不想找电脑记事本</h3>
+<h3>同一浏览器localStorage只有5M，不用的笔记请删除</h3>
+<h3>重要数据请自行保存！笔记丢失责任自负！</h3>
+<h3>★★★★★★★★★★★★★★★★★★★★</h3>
+    <!-- 笔记管理部分 -->
+    <div id="notes-section" class="section hidden">
+        
+<div class="input-group">
+    <div class="add-box">
+        <input type="text" id="note-input" placeholder="新增笔记">
+        <button onclick="addNote()">添加</button>
+    </div>
+    <div class="search-box">
+        <input type="text" id="search-input" placeholder="搜索笔记">
+        <button onclick="searchNotes()">搜索</button>
+    </div>
+</div>
+
+<div>       
+   <ul id="notes-list"></ul>
+</div>
+
+    <script>       
+        // 笔记管理功能
+        let notes = JSON.parse(localStorage.getItem('notes')) || [];
+
+        function loadNotes() {
+            const list = document.getElementById("notes-list");
+            const sortedNotes = [...notes].sort((a, b) => b.timestamp - a.timestamp);
+            list.innerHTML = sortedNotes.map((note, index) => `
+                <li>
+                    <div class="note-content">
+                        ${note.text}
+                        <small>${new Date(note.timestamp).toLocaleString()}</small>
+                    </div>
+                    <button class="delete-btn" onclick="deleteNote(${index})">删除</button>
+                </li>
+            `).join('');
+        }
+
+        function addNote() {
+            const text = document.getElementById("note-input").value.trim();
+            if (text) {
+                notes.push({ 
+                    text, 
+                    timestamp: Date.now() 
+                });
+                localStorage.setItem('notes', JSON.stringify(notes));
+                loadNotes();
+                document.getElementById("note-input").value = "";
+            }
+        }
+
+        function deleteNote(index) {
+            if (confirm('确定删除？')) {
+                // 由于我们显示的是排序后的笔记，需要找到原始数组中的对应索引
+                const sortedNotes = [...notes].sort((a, b) => b.timestamp - a.timestamp);
+                const noteToDelete = sortedNotes[index];
+                
+                // 从原始数组中删除
+                notes = notes.filter(note => note.timestamp !== noteToDelete.timestamp || note.text !== noteToDelete.text);
+                
+                localStorage.setItem('notes', JSON.stringify(notes));
+                loadNotes();
+            }
+        }
+
+        function searchNotes() {
+            const keyword = document.getElementById("search-input").value.toLowerCase();
+            let filteredNotes = keyword ? 
+                notes.filter(note => note.text.toLowerCase().includes(keyword)) : 
+                notes;
+            filteredNotes = filteredNotes.sort((a, b) => b.timestamp - a.timestamp);
+            const list = document.getElementById("notes-list");
+            list.innerHTML = filteredNotes.map((note, index) => `
+                <li>
+                    <div class="note-content">
+                        ${note.text}
+                        <small>${new Date(note.timestamp).toLocaleString()}</small>
+                    </div>
+                    <button class="delete-btn" onclick="deleteNote(${index})">删除</button>
+                </li>
+            `).join('');
+        }
+
+        // 回车键支持       
+        document.getElementById("note-input").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") addNote();
+        });
+
+        document.getElementById("search-input").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") searchNotes();
+        });
+
+        // 初始加载笔记
+        loadNotes();
+    </script>
+</body>
+</html>
