@@ -1,116 +1,285 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" content="width=device-width,user-scalable=no" name="viewport">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>数学公式计算器</title>
- <style>
-          h1{
-            text-align: center;
-        }
-        hr{
-            width:80%;
-        }
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #4a6bff;
+      --primary-hover: #3a5bef;
+      --secondary-color: #6c757d;
+      --success-color: #28a745;
+      --danger-color: #dc3545;
+      --light-color: #f8f9fa;
+      --dark-color: #343a40;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
-    }
-    div {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        align-self: center;
-        margin-bottom:10px;
-    }
-    a{
-        text-decoration: none;
-    }
-    form {
-      margin: 20px auto;
+      font-family: 'Roboto', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
       padding: 20px;
-      background-color: #fff;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      max-width: 500px;
+      color: #333;
+      line-height: 1.6;
     }
+    
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .calculator-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .calculator-header h1 {
+      color: var(--primary-color);
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    
+    .calculator-header p {
+      color: var(--secondary-color);
+      font-size: 1rem;
+    }
+    
+    .calculator-card {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 30px;
+      margin-bottom: 30px;
+      transition: var(--transition);
+    }
+    
+    .calculator-card:hover {
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
     label {
       display: block;
-      margin-bottom: 10px;
-      font-weight: bold;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--dark-color);
     }
-    input[type="text"] {
+    
+    .input-field {
       width: 100%;
-      height: 50px;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      margin-bottom: 20px;
-      box-sizing: border-box;
+      padding: 15px;
+      border: 2px solid #e9ecef;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      transition: var(--transition);
     }
-    button[type="submit"] {
-      background-color: #32CD32;
-      color: #fff;
-      padding: 10px 20px;
+    
+    .input-field:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.2);
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
       border: none;
-      border-radius: 5px;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      font-weight: 500;
       cursor: pointer;
+      transition: var(--transition);
+      text-align: center;
     }
-    button[type="submit"]:hover {
-      background-color: #00FF7F;
-      height: 40px;
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
     }
-    #result {
+    
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #5a6268;
+      transform: translateY(-2px);
+    }
+    
+    .btn-group {
+      display: flex;
+      justify-content: space-between;
       margin-top: 20px;
-      margin-bottom: 20px;
-      padding: 10px;
-      background-color: #fff;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      width: 100%;
-      height: 30px;
-      align-self: center;
-      clear:both;
+    }
+    
+    .result-container {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f8f9fa;
+      border-radius: var(--border-radius);
+      text-align: center;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .result {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+    
+    .instructions {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 25px;
+    }
+    
+    .instructions h2 {
+      color: var(--primary-color);
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+    }
+    
+    .instructions ul {
+      padding-left: 20px;
+    }
+    
+    .instructions li {
+      margin-bottom: 8px;
+      color: var(--secondary-color);
+    }
+    
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      color: var(--secondary-color);
+      font-size: 0.9rem;
+    }
+    
+    .footer a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    
+    .footer a:hover {
+      color: var(--primary-hover);
+      text-decoration: underline;
+    }
+    
+    @media (max-width: 576px) {
+      .calculator-header h1 {
+        font-size: 1.8rem;
+      }
+      
+      .calculator-card {
+        padding: 20px;
+      }
+      
+      .btn {
+        padding: 10px 20px;
+      }
     }
   </style>
 </head>
 
 <body>
-    <h3 align='center'>数学公式计算器</h3>
-    <div>
+  <div class="container">
+    <div class="calculator-header">
+      <h1>数学公式计算器</h1>
+      <p>快速计算各种数学表达式</p>
+    </div>
+    
+    <div class="calculator-card">
       <form onsubmit="calculate(); return false;">
-        <label for="expression">键盘输入算式，回车或点击“=”</label>
-        <input type="text" id="expression" name="expression" required>
-        <div style="display: flex; justify-content: center; align-items: center;align-self: center;" >
-            <div><button type="submit"> = </button></div>
+        <div class="form-group">
+          <label for="expression">输入数学表达式</label>
+          <input type="text" id="expression" class="input-field" placeholder="例如: (1-(1+0.13)^(-5))/0.13" required>
         </div>
-        <div id="result" style="clear:both;"></div>
-        <div style="display: flex; justify-content: center; align-items: center;align-self: center; margin-top: 10px;">
-          <button type="button" onclick="resetCalculator()">点我重置</button>
-        </div>    
+        
+        <div class="result-container">
+          <div id="result" class="result"></div>
+        </div>
+        
+        <div class="btn-group">
+          <button type="button" class="btn btn-secondary" onclick="resetCalculator()">
+            <i class="fas fa-redo"></i> 重置
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-equals"></i> 计算
+          </button>
+        </div>
       </form>
     </div>
-
-  <div>
-    <ul>
-        <li>括号使用英文状态输入,乘法使用星号（*）表示</li>
-        <li>幂运算使用脱字号（^）表示,除法使用斜杠（/）表示</li>
-        <li>百分数用小数表示,例如：(1-(1+0.13)^(-5))/0.13</li>
-    </ul>
+    
+    <div class="instructions">
+      <h2>使用说明</h2>
+      <ul>
+        <li>括号使用英文状态输入</li>
+       <li>加（+）减（-）乘（*）除（/）</li>
+        <li>5^3：5的3次方，5^(-2)=1/(5^2)</li>
+        <li>27^(1/3)：27的开3次方</li>
+        <li>12.13%写成0.1213</li>
+        <li>支持sin, cos, tan, log, sqrt 等</li>
+      </ul>
+    </div>
+    
+    <div class="footer">
+      <p>联系 <a href="mailto:116379452@qq.com">116379452@qq.com</a></p>
+    </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.4.4/math.min.js"></script>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   
   <script>
     function calculate() {
-      const expression = document.getElementById("expression").value;
-      const result = math.evaluate(expression).toFixed(4);
-      document.getElementById("result").innerHTML = result;
+      try {
+        const expression = document.getElementById("expression").value;
+        const result = math.evaluate(expression).toFixed(4);
+        document.getElementById("result").innerHTML = result;
+      } catch (error) {
+        document.getElementById("result").innerHTML = "表达式错误";
+        console.error(error);
+      }
     }
 
     function resetCalculator() {
-      document.getElementById("expression").value = ""; // 清空输入框
-      document.getElementById("result").innerHTML = ""; // 清空结果区域
+      document.getElementById("expression").value = "";
+      document.getElementById("result").innerHTML = "";
+      document.getElementById("expression").focus();
     }
+    
+    // 自动聚焦到输入框
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById("expression").focus();
+    });
   </script>
-  <h3 align='center'>mail:116379452@qq.com</h3>
 </body>
 </html>
