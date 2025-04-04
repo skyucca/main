@@ -5,60 +5,94 @@
     <title>酷优雅</title>
     <style>
         /* 链接不显示下划线 */
-	    a {
+        a {
             text-decoration: none;
         }
-        table {
-            width: 80%;
-            border-collapse: collapse;
-            margin-left: auto;
-            margin-right: auto;
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
         }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
+        .header {
             text-align: center;
+            padding: 20px;
+            background-color: #f8f8f8;
         }
-        th {
+        .container {
+            display: flex;
+            min-height: calc(100vh - 150px);
+        }
+        .sidebar {
+            width: 200px;
             background-color: #f2f2f2;
+            padding: 20px 0;
+        }
+        .tab {
+            padding: 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #ddd;
+            transition: background-color 0.3s;
+        }
+        .tab:hover {
+            background-color: #e6e6e6;
+        }
+        .tab.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-top: 1px solid #ddd;
         }
     </style>
 </head>
 <body>
-    <a href='../main/index.html'><h1 align="center">COOLYOYA 酷优雅</h1></a><hr>
-    <h1 align="center">实用工具</h1>
-    <table>
-        <tr>
-            <th>序号</th>
-            <th>链接</th>
-            <th>简介</th>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td><a href="calc.html" target="_blank">简明在线计算器</a></td>
-            <td>可以直接键盘输入进行简单的算术与数学计算</td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td><a href="xishu.html" target="_blank">复利系数计算器</a></td>
-            <td>计算复利现值系数、复利终值系数、年金现值系数、年金终值系数</td>
-        </tr>
-        <tr>
-            <td>3</td>
-            <td><a href="ganzhijinian.html" target="_blank">年份干支计算器</a></td>
-            <td>计算任一年份的天干地支。</td>
-        </tr>
-        <tr>
-            <td>4</td>
-            <td><a href="skynote.html" target="_blank">临时记事本</a></td>
-            <td>临时存放点资料的简易记事本</td>
-        </tr>
-         <tr>
-            <td>5</td>
-            <td><a href="clock_date.html" target="_blank">时钟与倒计时</a></td>
-            <td>显示时钟与未来某一事件距今天数</td>
-        </tr> 
-    </table>
-<hr><h5 align="center">mail:116379452@qq.com</h5>
+    <div class="header">
+        <h1>COOLYOYA 酷优雅</h1>
+    </div>
+    
+    <div class="container">
+        <div class="sidebar">
+            <div class="tab active" onclick="loadPage('calc.html')">简明在线计算器</div>
+            <div class="tab" onclick="loadPage('xishu.html')">复利系数计算器</div>
+            <div class="tab" onclick="loadPage('ganzhijinian.html')">年份干支计算器</div>
+            <div class="tab" onclick="loadPage('skynote.html')">临时记事本</div>
+            <div class="tab" onclick="loadPage('clock_date.html')">时钟与倒计时</div>
+        </div>
+        
+        <div class="content">
+            <iframe id="contentFrame" src="calc.html"></iframe>
+        </div>
+    </div>
+    
+    <hr>
+    <div class="footer">
+        <h5>mail:116379452@qq.com</h5>
+    </div>
+
+    <script>
+        function loadPage(pageUrl) {
+            // 更新iframe内容
+            document.getElementById('contentFrame').src = pageUrl;
+            
+            // 更新活动标签样式
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+        }
+    </script>
 </body>
 </html>
