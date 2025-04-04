@@ -1,119 +1,260 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
   <title>复利现值终值系数计算器</title>
-  <meta charset="UTF-8" content="width=device-width,user-scalable=no" name="viewport">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    /* CSS样式 */
-	.container {
-    	display: flex;
-    	flex-direction: column;
-    	justify-content: center;
-    	align-items: center;
-    	height: 10vh;
-    	text-align: center;
-    }
-       a{
-        text-decoration: none;
-    }
-        hr{
-            width:80%;
-        }
-    body {
-      font-family: Arial, sans-serif;
-    }
-            h1{
-            text-align: center;
-        }
-    label {
-      display: block;
-      margin-bottom: 10px;
-      margin-right: 10px;
-      margin-left:10px;
+    :root {
+      --primary-color: #4361ee;
+      --secondary-color: #3f37c9;
+      --accent-color: #4895ef;
+      --light-color: #f8f9fa;
+      --dark-color: #212529;
+      --success-color: #4cc9f0;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     
-    input[type="number"] {
-      width: 100px;
-      height: 40px;
-      margin-right:5px;
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 3px;
+    * {
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
     }
     
-    button {
-      display: inline-blockblock;
-      margin-top: 5px;
-      padding: 5px 15px;
-      background-color: #007bff;
-      color: #fff;
-      font-size: 15px;
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f7fa;
+      color: var(--dark-color);
+      line-height: 1.6;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .title {
+      text-align: center;
+      color: var(--primary-color);
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+    
+    .form-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
       align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .input-field {
+      position: relative;
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .input-field label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--dark-color);
+    }
+    
+    .input-field input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .input-field input:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+    
+    .btn {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
       border: none;
-      border-radius: 3px;
+      padding: 0.8rem 1.5rem;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      font-weight: 500;
       cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--box-shadow);
+      align-self: flex-end;
+      margin-top: 1.7rem;
     }
     
-    button:hover {
-      background-color: #0069d9;
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
     }
     
-    center {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    .btn:active {
+      transform: translateY(0);
     }
     
+    .results {
+      background-color: var(--light-color);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    
+    .result-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .result-item:last-child {
+      border-bottom: none;
+    }
+    
+    .result-label {
+      font-weight: 500;
+      color: var(--dark-color);
+    }
+    
+    .result-value {
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+    
+    .footer {
+      text-align: center;
+      margin-top: 2rem;
+      color: #6c757d;
+      font-size: 0.9rem;
+    }
+    
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #ddd, transparent);
+      margin: 1rem 0;
+    }
+    
+    @media (max-width: 600px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      .card {
+        padding: 1.5rem;
+      }
+      
+      .form-group {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .btn {
+        width: 100%;
+        margin-top: 1rem;
+      }
+    }
   </style>
 </head>
 
 <body>
+  <div class="container">
+    <div class="card">
+      <h1 class="title">复利现值终值系数计算器</h1>
+      
+      <div class="form-group">
+        <div class="input-field">
+          <label for="rate">利率 (%)</label>
+          <input type="number" id="rate" step="0.01" min="0" max="100" placeholder="例如: 5.25">
+        </div>
         
-  <h3 align='center'>复利现值终值系数计算器</h3>
-  
-  <div class="container"></div>
-      <form style="display:flex;justify-content:center">
-        <label for="rate">利率(%)：</label>
-        <input type="number" id="rate"  name="rate" step="0.01" min="0" max="100"><br>
-        <div style="margin-top: 10px;"></div>
-        <label for="periods">期数(n)：</label>
-        <input type="number" id="periods" name="periods" min="0">
-        <button type="button" onclick="calculate()">计算</button>
-      </form>
+        <div class="input-field">
+          <label for="periods">期数 (n)</label>
+          <input type="number" id="periods" min="0" placeholder="例如: 10">
+        </div>
+        
+        <button class="btn" onclick="calculate()">计算</button>
+      </div>
+      
+      <div id="results" class="results" style="display: none;">
+        <div class="result-item">
+          <span class="result-label">复利现值系数 [(1+i)^n]</span>
+          <span id="pvif" class="result-value">-</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">复利终值系数 [(1+i)^(-n)]</span>
+          <span id="fvif" class="result-value">-</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">年金现值系数 [(1-(1+i)^(-n))/i]</span>
+          <span id="pvifa" class="result-value">-</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">年金终值系数 [((1+i)^n-1)/i]</span>
+          <span id="fvifa" class="result-value">-</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="divider"></div>
+      <p>contact: 116379452@qq.com</p>
+    </div>
   </div>
-  
-  <div id="results" align='center'></div>
+
   <script>
-    // JavaScript代码
     function calculate() {
       // 获取用户输入
-      var rate = document.getElementById("rate").value;
-      var periods = document.getElementById("periods").value;
+      var rate = parseFloat(document.getElementById("rate").value);
+      var periods = parseInt(document.getElementById("periods").value);
+
+      // 验证输入
+      if (isNaN(rate) || isNaN(periods) || rate < 0 || periods < 0) {
+        alert("请输入有效的利率和期数！");
+        return;
+      }
 
       // 计算复利现值系数
-      var pvif = 1 / ((1 + rate/100)**periods);
+      var pvif = 1 / Math.pow(1 + rate/100, periods);
       
       // 计算复利终值系数
-      var fvif = (1 + rate/100)**periods;
+      var fvif = Math.pow(1 + rate/100, periods);
       
       // 计算年金现值系数
-      var pvifa = (1-(1 + rate/100)**(-periods)) / (rate/100);
+      var pvifa = (1 - Math.pow(1 + rate/100, -periods)) / (rate/100);
       
       // 计算年金终值系数
-      var fvifa = ((1 + rate/100)**periods - 1) / (rate/100);
-      
-
+      var fvifa = (Math.pow(1 + rate/100, periods) - 1) / (rate/100);
 
       // 显示结果
-      var results = document.getElementById("results");
-      results.innerHTML = "<p>复利现值系数 [(1+i)^n] = " + pvif.toFixed(4) + "</p>" +
-                          "<p>复利终值系数 [(1+i)^(-n)] = " + fvif.toFixed(4) + "</p>" +
-                          "<p>年金现值系数 [(1-(1+i)^(-n))/i] = " + pvifa.toFixed(4) + "</p>" +
-                          "<p>年金终值系数 [((1+i)^n-1)/i] = " + fvifa.toFixed(4) + "</p>";
+      document.getElementById("pvif").textContent = pvif.toFixed(6);
+      document.getElementById("fvif").textContent = fvif.toFixed(6);
+      document.getElementById("pvifa").textContent = pvifa.toFixed(6);
+      document.getElementById("fvifa").textContent = fvifa.toFixed(6);
+      
+      // 显示结果区域
+      document.getElementById("results").style.display = "block";
     }
-  </script></br>
-  <div align='center'>---------------------------------</div>
-  <div align='center'>contact:116379452@qq.com</div>
+  </script>
 </body>
 </html>
