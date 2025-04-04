@@ -1,102 +1,324 @@
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"> 
-<meta charset="UTF-8" content="width=device-width,user-scalable=no" name="viewport">
-<title>干支纪年查询</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>干支纪年查询</title>
     <style>
-        h1{
+        :root {
+            --primary-color: #4a6baf;
+            --secondary-color: #f8f9fa;
+            --accent-color: #ff7043;
+            --text-color: #333;
+            --light-text: #666;
+            --border-color: #ddd;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 28px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        h1:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--accent-color);
+        }
+        
+        .query-section {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background-color: var(--secondary-color);
+            border-radius: 6px;
+        }
+        
+        .input-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        input[type="text"] {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+            width: 200px;
             text-align: center;
         }
-        a{
-        text-decoration: none;
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
         }
-        hr{
-            width:80%;
+        
+        button:hover {
+            background-color: #3a5a9f;
+        }
+        
+        .result {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 18px;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            font-size: 22px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        table {
+            width: 100%;
+            max-width: 700px;
+            margin: 20px auto;
+            border-collapse: collapse;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: var(--secondary-color);
+        }
+        
+        .example {
+            background-color: #f0f7ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px auto;
+            max-width: 700px;
+            font-size: 18px;
+        }
+        
+        .highlight {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            input[type="text"] {
+                width: 80%;
+            }
+            
+            table {
+                font-size: 14px;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+            }
         }
     </style>
 </head>
-
 <body>
+    <div class="container">
+        <h1>干支纪年查询</h1>
+        
+        <div class="query-section">
+            <div class="input-group">
+                <input type="text" id="yearInput" placeholder="请输入年份(如：2025)">
+                <button onclick="ganzhi()">查询</button>
+            </div>
+            <div class="result" id="output"></div>
+        </div>
+        
+        <h2>年份的天干地支推算方法</h2>
+        
+        <h3>（1）年份尾数定天干：</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>年份尾数</th>
+                    <th>0</th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <th>5</th>
+                    <th>6</th>
+                    <th>7</th>
+                    <th>8</th>
+                    <th>9</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>年份天干</td>
+                    <td>庚</td>
+                    <td>辛</td>
+                    <td>壬</td>
+                    <td>癸</td>
+                    <td>甲</td>
+                    <td>乙</td>
+                    <td>丙</td>
+                    <td>丁</td>
+                    <td>戊</td>
+                    <td>己</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>（2）年份除以12的余数定地支：</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>年份除以12的余数</th>
+                    <th>0</th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <th>5</th>
+                    <th>6</th>
+                    <th>7</th>
+                    <th>8</th>
+                    <th>9</th>
+                    <th>10</th>
+                    <th>11</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>年份地支</td>
+                    <td>申</td>
+                    <td>酉</td>
+                    <td>戌</td>
+                    <td>亥</td>
+                    <td>子</td>
+                    <td>丑</td>
+                    <td>寅</td>
+                    <td>卯</td>
+                    <td>辰</td>
+                    <td>巳</td>
+                    <td>午</td>
+                    <td>未</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="example">
+            例如：<span class="highlight">2023</span>年，尾数<span class="highlight">3</span>，天干为<span class="highlight">癸</span>；
+            2023除以12余数<span class="highlight">7</span>，地支为<span class="highlight">卯</span>，
+            故2023年为<span class="highlight">癸卯</span>年。
+        </div>
+    </div>
 
-<h3 align="center">干支纪年查询</h3>
-  <div align="center"><input type="text" id="yearInput" placeholder="请输入年份（如：2023）">的干支为：
-<button onclick="ganzhi()">点击一下</button> ==⇒
-  <input type="text" id="output" readonly>年</div>
+    <script>
+        const tgan = {
+            0: "庚",
+            1: "辛",
+            2: "壬",
+            3: "癸",
+            4: "甲",
+            5: "乙",
+            6: "丙",
+            7: "丁",
+            8: "戊",
+            9: "己"
+        };
 
-  <script>
-    const tgan = {
-      0: "庚",
-      1: "辛",
-      2: "壬",
-      3:"癸",
-      4:"甲",
-      5:"乙",
-      6:"丙",
-      7:"丁",
-      8:"戊",
-      9:"己"
-    };
+        const dzhi = {
+            0: "申",
+            1: "酉",
+            2: "戌",
+            3: "亥",
+            4: "子",
+            5: "丑",
+            6: "寅",
+            7: "卯",
+            8: "辰",
+            9: "巳",
+            10: "午",
+            11: "未"
+        };
 
-    const dzhi = {
-      0:"申",
-      1:"酉",
-      2:"戌",
-      3:"亥",
-      4:"子",
-      5:"丑",
-      6:"寅",
-      7:"卯",
-      8:"辰",
-      9:"巳",
-      10:"午",
-      11:"未"
-};
-
-    function ganzhi() {
-      const yearInput = document.getElementById("yearInput");     
-      const year = parseInt(yearInput.value);
-      const lastDigit = year % 10;
-      const result1 = tgan[lastDigit]; 
-      const remainder = year % 12;
-      const result2 = dzhi[remainder];  
-      const result = result1 + result2    
-      const ganzhi = document.getElementById("output");
-      ganzhi.value = result;
-   }
-
-  </script>
-
-<div><hr></div>
-<div align="center" style="font-size: 23px">年份的天干地支推算方法</div>
-<div><p></p></div>
-<div align="center" style="font-size: 20px">（1）年份尾数定天干：</div>
-<div><p></p></div>
-<table border="1px" cellspacing="0px" style="border-collapse:collapse;font-size: 20px" align="center">
-<tbody>
-<tr>
-<td>年份尾数</td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td>
-</tr>
-<tr>
-<td>年份天干</td><td>庚</td><td>辛</td><td>壬</td><td>癸</td><td>甲</td><td>乙</td><td>丙</td><td>丁</td><td>戊</td><td>己</td>
-</tr>
-</tbody>
-</table>
-<div><p></p></div>
-<div align="center" style="font-size: 20px">（2）年份除以12的余数定地支：</div>
-<div><p></p></div>
-<table border="1px" cellspacing="0px" style="border-collapse:collapse;font-size: 20px" align="center">
-<tbody>
-<tr>
-<td>年份除以12的余数</td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td>
-</tr>
-<tr>
-<td>年份地支</td><td>申</td><td>酉</td><td>戌</td><td>亥</td><td>子</td><td>丑</td><td>寅</td><td>卯</td><td>辰</td><td>巳</td><td>午</td><td>未</td>
-</tr>
-</tbody>
-</table>
-<div><p></p></div>
-<div align="center" style="font-size: 20px">如：2023年，尾数3，天干为癸，2023除以12余数7，地支为卯，故2023年为癸卯年。</div>
+        function ganzhi() {
+            const yearInput = document.getElementById("yearInput");
+            const year = parseInt(yearInput.value);
+            
+            if (isNaN(year)) {
+                alert("请输入有效的年份数字");
+                return;
+            }
+            
+            const lastDigit = year % 10;
+            const result1 = tgan[lastDigit]; 
+            const remainder = year % 12;
+            const result2 = dzhi[remainder];  
+            const result = result1 +" "+ result2;
+            
+            const output = document.getElementById("output");
+            output.textContent = `按照干支纪年，${year}年是 ${result} 年`;
+            output.style.color = "#e53935";
+        }
+        
+        // 添加回车键支持
+        document.getElementById("yearInput").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") {
+                ganzhi();
+            }
+        });
+    </script>
 </body>
 </html>
