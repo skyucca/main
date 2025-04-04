@@ -198,19 +198,19 @@
       
       <div id="results" class="results" style="display: none;">
         <div class="result-item">
-          <span class="result-label">复利现值系数 [(1+i)^n]</span>
+          <span class="result-label">复利现值系数 [(1+i)^n] = </span>
           <span id="pvif" class="result-value">-</span>
         </div>
         <div class="result-item">
-          <span class="result-label">复利终值系数 [(1+i)^(-n)]</span>
+          <span class="result-label">复利终值系数 [(1+i)^(-n)] = </span>
           <span id="fvif" class="result-value">-</span>
         </div>
         <div class="result-item">
-          <span class="result-label">年金现值系数 [(1-(1+i)^(-n))/i]</span>
+          <span class="result-label">年金现值系数 [(1-(1+i)^(-n))/i] = </span>
           <span id="pvifa" class="result-value">-</span>
         </div>
         <div class="result-item">
-          <span class="result-label">年金终值系数 [((1+i)^n-1)/i]</span>
+          <span class="result-label">年金终值系数 [((1+i)^n-1)/i] = </span>
           <span id="fvifa" class="result-value">-</span>
         </div>
       </div>
@@ -247,10 +247,10 @@
       var fvifa = (Math.pow(1 + rate/100, periods) - 1) / (rate/100);
 
       // 显示结果
-      document.getElementById("pvif").textContent = pvif.toFixed(6);
-      document.getElementById("fvif").textContent = fvif.toFixed(6);
-      document.getElementById("pvifa").textContent = pvifa.toFixed(6);
-      document.getElementById("fvifa").textContent = fvifa.toFixed(6);
+      document.getElementById("pvif").textContent = pvif.toFixed(4);
+      document.getElementById("fvif").textContent = fvif.toFixed(4);
+      document.getElementById("pvifa").textContent = pvifa.toFixed(4);
+      document.getElementById("fvifa").textContent = fvifa.toFixed(4);
       
       // 显示结果区域
       document.getElementById("results").style.display = "block";
